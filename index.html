@@ -7,7 +7,7 @@
     
     <!-- Discord Embed Meta Tags -->
     <meta property="og:title" content="Proxy Hub - Premium Roblox Script Hub">
-    <meta property="og:description" content="Your ultimate destination for high-quality Roblox scripts. Supporting 50+ games with advanced security and 24/7 support.">
+    <meta property="og:description" content="Your ultimate destination for high-quality Roblox scripts. Supporting 7+ games with advanced features and 24/7 support.">
     <meta property="og:image" content="https://i.imgur.com/example-image.png">
     <meta property="og:url" content="https://proxyhub.netlify.app">
     <meta property="og:type" content="website">
@@ -17,11 +17,11 @@
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Proxy Hub - Premium Roblox Script Hub">
-    <meta name="twitter:description" content="Your ultimate destination for high-quality Roblox scripts. Supporting 50+ games with advanced security and 24/7 support.">
+    <meta name="twitter:description" content="Your ultimate destination for high-quality Roblox scripts. Supporting 7+ games with advanced features and 24/7 support.">
     <meta name="twitter:image" content="https://i.imgur.com/example-image.png">
     
     <!-- Additional Meta Tags -->
-    <meta name="description" content="Premium Roblox Script Hub supporting 50+ games with advanced security features, 24/7 support, and regular updates.">
+    <meta name="description" content="Premium Roblox Script Hub supporting 7+ games with advanced features, 24/7 support, and regular updates.">
     <meta name="keywords" content="roblox, scripts, hub, gaming, executor, premium">
     <meta name="author" content="Proxy Hub">
     <meta name="robots" content="index, follow">
@@ -368,19 +368,19 @@
         <!-- Stats -->
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number">7+</div>
+                <div class="stat-number" data-target="7" data-suffix="+">0+</div>
                 <div class="stat-label">Supported Games</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">100%</div>
+                <div class="stat-number" data-target="100" data-suffix="%">0%</div>
                 <div class="stat-label">Uptime</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">24/7</div>
+                <div class="stat-number" data-special="24/7">24/7</div>
                 <div class="stat-label">Support</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">2k+</div>
+                <div class="stat-number" data-target="2000" data-suffix="k+">0k+</div>
                 <div class="stat-label">Active Users</div>
             </div>
         </div>
@@ -524,18 +524,41 @@
             initializeCounters() {
                 const counters = document.querySelectorAll('.stat-number');
                 counters.forEach(counter => {
-                    const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
+                    // Check if it's a special case (like 24/7)
+                    if (counter.hasAttribute('data-special')) {
+                        // Skip animation for special cases
+                        return;
+                    }
+                    
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const suffix = counter.getAttribute('data-suffix') || '';
                     const increment = target / 100;
                     let current = 0;
                     
                     const updateCounter = () => {
                         if (current < target) {
                             current += increment;
-                            counter.textContent = Math.floor(current) + (counter.textContent.includes('.') ? '.9%' : counter.textContent.includes('K') ? 'K+' : counter.textContent.includes('/') ? '/7' : '+');
+                            const displayValue = Math.floor(current);
+                            
+                            // Format the display based on the suffix
+                            if (suffix === 'k+') {
+                                counter.textContent = (displayValue / 1000).toFixed(1) + 'k+';
+                            } else {
+                                counter.textContent = displayValue + suffix;
+                            }
+                            
                             setTimeout(updateCounter, 20);
+                        } else {
+                            // Ensure final value is exactly the target
+                            if (suffix === 'k+') {
+                                counter.textContent = (target / 1000).toFixed(0) + 'k+';
+                            } else {
+                                counter.textContent = target + suffix;
+                            }
                         }
                     };
                     
+                    // Start the animation after a delay
                     setTimeout(updateCounter, 500);
                 });
             }
